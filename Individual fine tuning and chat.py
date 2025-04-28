@@ -1,25 +1,35 @@
+from pathlib import Path
+from dotenv import load_dotenv
+from openai import OpenAI
 import os
 import time
 import json
-from openai import OpenAI
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-import os
-from openai import OpenAI
+# Load .env variables properly
+dotenv_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
-client = OpenAI(api="OPEN_AI_KEY")  # Replace with your actual API key
+# Set up OpenAI client
+client = OpenAI()
 
-print("API Key Loaded Successfully!")
+print("✅ API Key Loaded Successfully!")
 
 # Directory containing your JSONL files
-JSONL_DIR = "jsonl_files"  # Ensure all your JSONL files are in this directory
-import os
-import json
+JSONL_DIR = Path(__file__).parent / "jsonl-files"  # <-- fixed folder name!
 
-# Path to the JSONL files
-jsonl_directory = "jsonl_files"
+# Make sure the JSONL directory exists (create it if missing)
+if not JSONL_DIR.exists():
+    print(f"📂 'jsonl-files' folder not found. Creating it at {JSONL_DIR}...")
+    JSONL_DIR.mkdir(parents=True, exist_ok=True)
+else:
+    print(f"📂 'jsonl-files' folder found at {JSONL_DIR}")
+
+# Example: Loop through files
+for jsonl_file in JSONL_DIR.iterdir():
+    if jsonl_file.suffix == ".jsonl":
+        print(f"Found JSONL file: {jsonl_file.name}")
+        # (you can call validate_and_fix_jsonl(jsonl_file) etc here)
+
 
 def validate_and_fix_jsonl(file_path):
     """ Validates and fixes JSONL files by ensuring proper JSON formatting. """
@@ -44,10 +54,6 @@ def validate_and_fix_jsonl(file_path):
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
 
-# Process all JSONL files in the directory
-for jsonl_file in os.listdir(jsonl_directory):
-    if jsonl_file.endswith(".jsonl"):
-        validate_and_fix_jsonl(os.path.join(jsonl_directory, jsonl_file))
 
 print("🚀 JSONL validation and fixing complete.")
 

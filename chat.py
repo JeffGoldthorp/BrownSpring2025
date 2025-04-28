@@ -21,7 +21,7 @@ def chat_with_gpt(prompt):
                 },
                 {"role": "user", "content": prompt},
             ],
-            model= "ft:gpt-4o-mini-2024-07-18:university-of-mary-washington::AaxgQQAe",
+            model= "ftjob-7mrQ1tLqdYTqrCL9qm4QcvPe",
             temperature=.2,
             max_completion_tokens=300 
         )
